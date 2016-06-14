@@ -11,8 +11,14 @@ https://github.com/novelinux/system_calls/blob/master/fork.md
 user --> kernel
 ----------------------------------------
 
-| kernel stack |            |
-|--------------|-----------:|
-|   r0 - r12   |  left-aligned | $1600 |
-|     sp^      |    centered   |   $12 |
-|     lr^      | right-aligned |    $1 |
+```
+| kernel stack |
+|--------------|-----------|------------
+|   r0 ~ r12   |           |
+|     sp^      |           |
+|     lr^      |           | {struct  pt_regs}
+|     lr       |           | { S_FRAME_SIZE  }
+|    cpsr      |           |
+|     r0       | <- sp     |
+|              |------------------------
+```
