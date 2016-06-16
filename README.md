@@ -11,14 +11,55 @@ https://github.com/novelinux/system_calls/blob/master/fork.md
 user --> kernel
 ----------------------------------------
 
+在系统调用通过软中断swi从用户态切换到内核态的压栈过程如下所示:
+
 ```
-| kernel stack |
-|--------------|-----------|------------
-|   r0 ~ r12   |           |
-|     sp^      |           |
-|     lr^      |           | {struct  pt_regs}
-|     lr       |           | { S_FRAME_SIZE  }
-|    cpsr      |           |
-|     r0       | <- sp     |
+| kernel stack |  struct pt_regs
+|--------------|-----------------------
+|   r0 ~ r12   |
+|    sp_usr    |    sp
+|    lr_usr    |    lr
+|    lr_svc    |    pc
+|     cpsr     |   cpsr
+|      r0      |
+|              |------------------------ <- sp_svc
+```
+
+**注意**: lr_svc中是指向swi中断指令的下一条指令.
+
+### swi
+
+软中断调用过程:
+
+https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
+
+### vector_swi
+
+软中断处理函数:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/vector_swi.md
+
+### struct pt_regs
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/ptrace.h/struct_pt_regs.md
+
+kernel --> user
+----------------------------------------
+
+在系统调用从内核态返回到用户态的调用过程如下所示:
+
+```
+| kernel stack |  struct pt_regs
+|--------------|----------------------- <- sp_svc
+|   r0 ~ r12   |         --> r0 ~ r12
+|    sp_usr    |    sp   --> sp_usr
+|    lr_usr    |    lr   --> lr_usr
+|    lr_svc    |    pc   --> lr_svc    --> pc
+|     cpsr     |   cpsr  --> spsr_cxsf
+|      r0      |
 |              |------------------------
 ```
+
+在从内核态返回到用户态的过程是由ret_fast_syscall来完成的:
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/ret_fast_syscall.md
