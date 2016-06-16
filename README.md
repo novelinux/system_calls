@@ -25,7 +25,10 @@ user --> kernel
 |              |------------------------ <- sp_svc
 ```
 
-**注意**: lr_svc中是指向swi中断指令的下一条指令.
+**注意**:
+
+1.lr_svc中是指向swi中断指令的下一条指令.
+2.这里r0会存两个位置: 一个代表第一个参数，另一个代表返回值。
 
 ### swi
 
@@ -51,7 +54,7 @@ kernel --> user
 ```
 | kernel stack |  struct pt_regs
 |--------------|----------------------- <- sp_svc
-|   r0 ~ r12   |         --> r0 ~ r12
+|   r0 ~ r12   |         --> r1 ~ r12
 |    sp_usr    |    sp   --> sp_usr
 |    lr_usr    |    lr   --> lr_usr
 |    lr_svc    |    pc   --> lr_svc    --> pc
@@ -59,6 +62,8 @@ kernel --> user
 |      r0      |
 |              |------------------------
 ```
+
+**注意**: ret_fast_syscall不会将r0寄存器值恢复,r0要用来保存返回值.
 
 在从内核态返回到用户态的过程是由ret_fast_syscall来完成的:
 
