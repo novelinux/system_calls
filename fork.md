@@ -102,23 +102,6 @@ path: kernel/arch/arm/include/asm/unistd.h
 * 而在老的OABI中则是执行的swi中断号的方式, 也就是说原来的调用方式(Old ABI)是通过跟随在swi
   指令中的调用号来进行的.
 
-swi
-----------------------------------------
-
-如上面的代码，用swi #0指令即可触发软中断，并切换到内核态(管理模式)。
-
-https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
-
-vector_swi
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/vector_swi.md
-
-sys_call_table
-----------------------------------------
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/sys_call_table.md
-
 sys_fork
 ----------------------------------------
 

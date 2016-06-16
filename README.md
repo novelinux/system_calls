@@ -3,10 +3,19 @@ system calls
 
 Linux的系统调用是通过软中断swi来实现的从用户态到内核态.
 
-fork
+swi
 ----------------------------------------
 
-https://github.com/novelinux/system_calls/blob/master/fork.md
+用swi #0指令即可触发软中断，并切换到内核态(管理模式)。
+
+https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
+
+sys_call_table
+----------------------------------------
+
+系统调用表.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/sys_call_table.md
 
 user --> kernel
 ----------------------------------------
@@ -29,12 +38,6 @@ user --> kernel
 
 1.lr_svc中是指向swi中断指令的下一条指令.
 2.这里r0会存两个位置: 一个代表第一个参数，另一个代表返回值。
-
-### swi
-
-软中断调用过程:
-
-https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
 
 ### vector_swi
 
@@ -66,5 +69,7 @@ kernel --> user
 **注意**: ret_fast_syscall不会将r0寄存器值恢复,r0要用来保存返回值.
 
 在从内核态返回到用户态的过程是由ret_fast_syscall来完成的:
+
+### ret_fast_syscall
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/ret_fast_syscall.md
