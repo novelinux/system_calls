@@ -1,6 +1,10 @@
 open
 ========================================
 
+在读和写文件之前，我们必须先打开文件。从应用程序的角度来看，
+这是通过标准库的open函数完成的，该函数返回一个文件描述符。
+该函数使用了sys_open系统调用.
+
 path: bionic/libc/bionic/open.cpp
 ```
 int open(const char* pathname, int flags, ...) {
