@@ -10,13 +10,6 @@ swi
 
 https://github.com/novelinux/arch-arm-common/tree/master/swi/README.md
 
-sys_call_table
-----------------------------------------
-
-系统调用表.
-
-https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/sys_call_table.md
-
 user --> kernel
 ----------------------------------------
 
@@ -48,6 +41,13 @@ https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-commo
 ### struct pt_regs
 
 https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/include/asm/ptrace.h/struct_pt_regs.md
+
+sys_call_table
+----------------------------------------
+
+系统调用表.
+
+https://github.com/novelinux/linux-4.x.y/tree/master/arch/arm/kernel/entry-common.S/sys_call_table.md
 
 kernel --> user
 ----------------------------------------
