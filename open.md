@@ -49,3 +49,8 @@ sys_openat
 最终通过系统调用会切换到内核态调用sys_openat函数.
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/open.c/sys_openat.md
+
+samples
+----------------------------------------
+
+https://github.com/novelinux/linux-4.x.y/tree/master/samples/fs/test_open/README.md
