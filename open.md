@@ -1,6 +1,8 @@
 open
 ========================================
 
+* open
+
 ```
 open
  |
@@ -34,6 +36,36 @@ do_sys_open
  |
  +-> fd_install +-> __fd_install
 ```
+
+* do_last
+
+```
+do_last
+ |
+ +-> handle_dots (nd->last_type != LAST_NORM)
+ |
+ +-> lookup_fast (!(open_flag & O_CREAT))
+ |
+ +-> mnt_want_write (op->open_flag & (O_CREAT | O_TRUNC | O_WRONLY | O_RDWR))
+ |
+ +-> lookup_open
+ |   |
+ |   +-> lookup_dcache
+ |   |
+ |   +-> lookup_real
+ |   |
+ |   +-> vfs_create
+ |       |
+ |       +-> may_create
+ |       |
+ |       +-> dir->i_op->create (ext4_dir_inode_operations)
+ |
+ +-> may_open
+ |
+ +-> vfs_open
+```
+
+* ext4_create
 
 open
 ----------------------------------------
