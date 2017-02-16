@@ -1,6 +1,56 @@
 write
 ========================================
 
+* function
+
+```
+write
+ |
+sys_write
+ |
+ +-> fdget_pos (fd --> struct fd)
+ |
+ +-> file_pos_read
+ |
+ +-> vfs_write -> __vfs_write -> new_sync_write -> filp->f_op_write_iter -+
+ |                                                                        |
+ |              +-  __generic_file_write_iter <-  ext4_file_write_iter  <-+
+ |              |
+ | generic_perform_write
+ | |
+ | +-> aops->write_begin
+ | |
+ | +-> ext4_da_write_begin
+ | |   |
+ | |   +-file encrypt-> ext4_block_write_begin
+ | |   |
+ | |   +-> __block_write_begin
+ | |
+ | +-> aops->write_end -> ext4_da_write_end
+ |
+ +-> file_pos_write
+```
+
+* data structure
+
+```
+fd -> struct fd -+
+                 |
+  struct file  <-+
+  |
+  +-> struct path
+  |   |
+  |   +-> struct vfsmount -+-> struct super_block
+  |   |                    |
+  |   +-> struct dentry  <-+
+  |                   |
+  +-> struct inode  <-+-> struct qstr (d_name)
+  |         +         |
+  |         |         +-> struct dentry (d_parent)
+  |         +
+  +-> struct address_space
+```
+
 write
 ----------------------------------------
 

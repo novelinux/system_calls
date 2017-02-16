@@ -1,6 +1,43 @@
 open
 ========================================
 
+```
+open
+ |
+__openat
+ |
+sys_openat
+ |
+do_sys_open
+ |
+ +-> build_open_flags
+ |
+ +-> getname
+ |
+ +-> getunused_fd_flags
+ |
+ +-> do_filp_open
+ |   |
+ |   +-> set_nameidata
+ |   |
+ |   +-> path_openat
+ |   |   |
+ |   |   +-> get_empty_filep (struct file)
+ |   |   |
+ |   |   +-> path_init
+ |   |   |
+ |   |   +-> link_path_walk
+ |   |   |
+ |   |   +-> do_last
+ |   |
+ |   +-> restore_nameidata
+ |
+ +-> fd_install +-> __fd_install
+```
+
+open
+----------------------------------------
+
 在读和写文件之前，我们必须先打开文件。从应用程序的角度来看，
 这是通过标准库的open函数完成的，该函数返回一个文件描述符。
 该函数使用了sys_open系统调用.
