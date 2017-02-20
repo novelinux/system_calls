@@ -12,23 +12,52 @@ sys_write
  |
  +-> file_pos_read
  |
- +-> vfs_write -> __vfs_write -> new_sync_write -> filp->f_op_write_iter -+
- |                                                                        |
- |              +-  __generic_file_write_iter <-  ext4_file_write_iter  <-+
- |              |
- | generic_perform_write
+ +-> vfs_write -> __vfs_write -> new_sync_write -+
+ | filp->f_op_write_iter         <----        <--+
  | |
- | +-> aops->write_begin
+ | ext4_file_write_iter
  | |
- | +-> ext4_da_write_begin
+ | +-> __generic_file_write_iter
  | |   |
- | |   +-file encrypt-> ext4_block_write_begin
+ | |   generic_perform_write
  | |   |
- | |   +-> __block_write_begin
+ | |   +-> aops->write_begin
+ | |   |
+ | |   +-> ext4_da_write_begin
+ | |   |   |
+ | |   |   +-file encrypt-> ext4_block_write_begin
+ | |   |   |
+ | |   |   +-> __block_write_begin
+ | |   |
+ | |   +-> aops->write_end -> ext4_da_write_end
  | |
- | +-> aops->write_end -> ext4_da_write_end
- |
- +-> file_pos_write
+ | +-> generic_write_sync -> vfs_sync_range -+
+ +-> file_pos_write          |
+   ext4_sync_file          <-+
+   |
+   generic_file_fsync
+   |
+   __generic_file_fsync
+   |
+   filemap_write_and_wait_range
+   |
+   filemap_fdatawrite
+   |
+   __filemap_fdatawrite
+   |
+   __filemap_fdatawrite_range
+   |
+   do_writepages
+   |
+   ext4_writepages
+   |
+   mpage_prepare_extent_to_map
+   |
+   mpage_process_page_bufs
+   |
+   mpage_submit_page
+   |
+   ext4_bio_write_page -> ext4_encrypt
 ```
 
 * data structure
