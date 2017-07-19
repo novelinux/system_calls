@@ -118,7 +118,7 @@ ext4_da_write_end { event: ext4_da_write_end }
      __ext4_journal_stop -> jbd2_journal_stop { event: jbd2_handle_stats }
 ```
 
-## ext4_writepages -- kworker/u16:8-9916
+## ext4_writepages -- kworker/u16:8-9916 - forked from kthreadd(pid 2)
 
 ```
 ext4_writepages
@@ -196,6 +196,58 @@ ext4_map_blocks
  |   +-> { event: ext4_ext_map_blocks_exit }
  |
  +-> ext4_es_insert_extent { event: ext4_es_insert_extent }
+```
+
+### kthreadd
+
+https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md
+
+### kworker
+
+#### add kworker
+
+```
+create_worker
+ |
+kthread_create_on_node -> ( worker_thread )
+ |
+create->threadfn = worker_thread
+ |
+list_add_tail( kthread_create_list )
+```
+
+#### run kworker
+
+```
+kthreadd
+ |
+create_kthread   ret_from_fork
+ |                    |
+kernel_thread -> ( kthread )
+                      |
+ threadfn = create->threadfn
+  |
+ worker_thread
+  |
+ process_one_work
+  |
+ wb_workfn
+  |
+ wb_do_writeback
+  |
+ wb_check_old_data_flush
+  |
+ wb_writeback
+  |
+ __writeback_inodes_wb
+  |
+ writeback_sb_inodes
+  |
+ __writeback_single_inode
+  |
+ do_writepages
+  |
+ ext4_writepages
 ```
 
 ## kjournald2 - jbd2/sda16-8-578
