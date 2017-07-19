@@ -198,15 +198,19 @@ ext4_map_blocks
  +-> ext4_es_insert_extent { event: ext4_es_insert_extent }
 ```
 
-### kthreadd
-
-https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md
-
 ### kworker
 
 #### add kworker
 
 ```
+ret_from_fork
+ |
+worker_thread
+ |
+manage_workers
+ |
+maybe_create_worker
+ |
 create_worker
  |
 kthread_create_on_node -> ( worker_thread )
@@ -219,7 +223,9 @@ list_add_tail( kthread_create_list )
 #### run kworker
 
 ```
-kthreadd
+rest_init
+ |
+kernel_thread ( kthreadd )
  |
 create_kthread   ret_from_fork
  |                    |
@@ -249,6 +255,8 @@ kernel_thread -> ( kthread )
   |
  ext4_writepages
 ```
+
+* kthreadd: https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md
 
 ## kjournald2 - jbd2/sda16-8-578
 
