@@ -201,11 +201,15 @@ ext4_map_blocks
  +-> ext4_es_insert_extent { event: ext4_es_insert_extent }
 ```
 
-## kworker
+## kworker - process wb_workfn
 
 https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/README.md
 
 ```
+ret_from_fork
+ |
+kthread
+ |
 worker_thread
  |
 process_one_work
@@ -229,7 +233,107 @@ do_writepages
 ext4_writepages
 ```
 
-* kthreadd: https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md
+## kworker - insert wb_workfn
+
+```
+ret_from_fork
+ |
+kthread
+ |
+worker_thread
+ |
+process_one_work
+ |
+async_run_entry_fn
+ |
+entry->func = ufshcd_async_scan
+ |
+ufshcd_probe_hba
+ |
+ufshcd_scsi_add_wlus
+ |
+__scsi_add_device
+ |
+scsi_probe_and_add_lun
+ |
+scsi_alloc_sdev
+ |
+scsi_alloc_queue
+ |
+__scsi_alloc_queue
+ |
+blk_init_queue
+ |
+blk_init_queue_node
+ |
+blk_alloc_queue_node
+ |
+bdi_init
+ |
+cgwb_bdi_init
+ |
+wb_init
+ |
+INIT_DELAYED_WORK(&wb->dwork, wb_forkfn)
+```
+
+## kworker - insert async_run_entry_fn
+
+```
+ret_from_fork
+ |
+kernel_init
+ |
+kernel_init_freeable
+ |
+do_basic_setup
+ |
+do_initcalls
+ |
+do_initcall_level
+ |
+do_one_initcall
+ |
+module_platform_dirver(ufs_qcom_pltform)
+ |
+module_driver(ufs_qcom_pltform) = ufs_qcom_pltform_init
+ |
+platform_driver_register
+ |
+__platform_driver_register
+ |
+dirver_register
+ |
+bus_add_driver
+ |
+driver_attach
+ |
+bus_for_each_dev
+ |
+__driver_attach
+ |
+driver_probe_device
+ |
+really_probe
+ |
+dev->bus->probe = platform_drv_probe
+ |
+drv->probe = ufs_qcom_probe
+ |
+ufshcd_pltfrm_init
+ |
+ufshcd_init
+ |
+async_schedule(ufshcd_async_scan)
+ |
+__async_schedule
+ |
+ +-> INIT_WORK(entry->work, async_run_entry_fn)
+ |
+ +-> async_entry->func = ufshcd_async_scan
+ |
+ +-> queue_work(system_unbound_wq, &entry->work)
+```
 
 ## kjournald2 - jbd2/sda16-8-578
 
