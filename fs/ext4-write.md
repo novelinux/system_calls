@@ -118,7 +118,10 @@ ext4_da_write_end { event: ext4_da_write_end }
      __ext4_journal_stop -> jbd2_journal_stop { event: jbd2_handle_stats }
 ```
 
-## ext4_writepages -- kworker/u16:8-9916 - forked from kthreadd(pid 2)
+## ext4_writepages
+
+这个函数在带SYNC的写操作中(O_SYNC或fsync)操作一般由调用写操作的进程本身执行,正常不带SYNC的
+写操作又kworker来执行对应的writepages.
 
 ```
 ext4_writepages
@@ -198,62 +201,32 @@ ext4_map_blocks
  +-> ext4_es_insert_extent { event: ext4_es_insert_extent }
 ```
 
-### kworker
+## kworker
 
-#### add kworker
+https://github.com/novelinux/linux-4.x.y/tree/master/kernel/workqueue.c/README.md
 
 ```
-ret_from_fork
- |
 worker_thread
  |
-manage_workers
+process_one_work
  |
-maybe_create_worker
+wb_workfn
  |
-create_worker
+wb_do_writeback
  |
-kthread_create_on_node -> ( worker_thread )
+wb_check_old_data_flush
  |
-create->threadfn = worker_thread
+wb_writeback
  |
-list_add_tail( kthread_create_list )
-```
-
-#### run kworker
-
-```
-rest_init
+__writeback_inodes_wb
  |
-kernel_thread ( kthreadd )
+writeback_sb_inodes
  |
-create_kthread   ret_from_fork
- |                    |
-kernel_thread -> ( kthread )
-                      |
- threadfn = create->threadfn
-  |
- worker_thread
-  |
- process_one_work
-  |
- wb_workfn
-  |
- wb_do_writeback
-  |
- wb_check_old_data_flush
-  |
- wb_writeback
-  |
- __writeback_inodes_wb
-  |
- writeback_sb_inodes
-  |
- __writeback_single_inode
-  |
- do_writepages
-  |
- ext4_writepages
+__writeback_single_inode
+ |
+do_writepages
+ |
+ext4_writepages
 ```
 
 * kthreadd: https://github.com/novelinux/linux-4.x.y/tree/master/init/main.c/rest_init.md
