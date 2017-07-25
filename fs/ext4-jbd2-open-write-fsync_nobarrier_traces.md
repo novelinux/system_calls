@@ -34,11 +34,7 @@ int main(int argc, char *argv[])
 ## open-write JBD2 - nobarrier
 
 ```
-  test-open-writ-6040  [000] ...1  6883.863812: writeback_mark_inode_dirty: bdi (unknown): ino=59025 state= flags=I_DIRTY_SYNC|I_DIRTY_TIME
-  test-open-writ-6040  [000] ...1  6883.863920: writeback_dirty_inode_start: bdi (unknown): ino=59025 state= flags=I_DIRTY_SYNC|I_DIRTY_TIME
-  test-open-writ-6040  [000] ...1  6883.863930: writeback_dirty_inode: bdi (unknown): ino=59025 state= flags=I_DIRTY_SYNC|I_DIRTY_TIME
-  test-open-writ-6040  [000] ...1  6883.864725: ext4_es_lookup_extent_enter: dev 259,0 ino 2 lblk 0
-  test-open-writ-6040  [000] ...1  6883.864749: ext4_es_lookup_extent_exit: dev 259,0 ino 2 found 1 [0/1) 1549 W0x10
+open:
   test-open-writ-6040  [000] ...1  6883.865692: ext4_request_inode: dev 259,0 dir 2 mode 0107320
   test-open-writ-6040  [000] ...1  6883.865772: ext4_journal_start: dev 259,0 blocks, 35 rsv_blocks, 0 caller __ext4_new_inode+0x750/0x1338
   test-open-writ-6040  [000] ...1  6883.865962: ext4_mark_inode_dirty: dev 259,0 ino 23 caller ext4_ext_tree_init+0x24/0x30
@@ -48,6 +44,8 @@ int main(int argc, char *argv[])
   test-open-writ-6040  [000] ...1  6883.865986: ext4_es_lookup_extent_exit: dev 259,0 ino 2 found 1 [0/1) 1549 W0x10
   test-open-writ-6040  [000] ...1  6883.866006: ext4_mark_inode_dirty: dev 259,0 ino 2 caller add_dirent_to_buf+0x170/0x1dc
   test-open-writ-6040  [000] ...1  6883.866019: ext4_mark_inode_dirty: dev 259,0 ino 23 caller ext4_add_nondir+0x34/0x7c
+
+write:
   test-open-writ-6040  [000] ...1  6883.866110: ext4_da_write_begin: dev 259,0 ino 23 pos 0 len 12 flags 0
   test-open-writ-6040  [000] ...1  6883.866137: ext4_journal_start: dev 259,0 blocks, 1 rsv_blocks, 0 caller ext4_da_write_begin+0x1d4/0x304
   test-open-writ-6040  [000] ...1  6883.866155: ext4_es_lookup_extent_enter: dev 259,0 ino 23 lblk 0
@@ -63,13 +61,13 @@ int main(int argc, char *argv[])
   test-open-writ-6040  [000] d..2  6883.866264: writeback_dirty_page: bdi 8:0: ino=23 index=0
   test-open-writ-6040  [000] ...1  6883.866275: writeback_mark_inode_dirty: bdi 8:0: ino=23 state= flags=I_DIRTY_PAGES
   test-open-writ-6040  [000] ...1  6883.866285: writeback_dirty_inode_enqueue: dev 259,0 ino 23 dirtied 4295625682 state I_DIRTY_PAGES mode 0107320
-
   test-open-writ-6040  [000] ...1  6883.866287: writeback_mark_inode_dirty: bdi 8:0: ino=23 state=I_DIRTY_PAGES flags=I_DIRTY_SYNC|I_DIRTY_DATASYNC|I_DIRTY_PAGES
   test-open-writ-6040  [000] ...1  6883.866289: writeback_dirty_inode_start: bdi 8:0: ino=23 state=I_DIRTY_PAGES flags=I_DIRTY_SYNC|I_DIRTY_DATASYNC|I_DIRTY_PAGES
   test-open-writ-6040  [000] ...1  6883.866290: ext4_journal_start: dev 259,0 blocks, 2 rsv_blocks, 0 caller ext4_dirty_inode+0x30/0x68
   test-open-writ-6040  [000] ...1  6883.866291: ext4_mark_inode_dirty: dev 259,0 ino 23 caller ext4_dirty_inode+0x44/0x68
   test-open-writ-6040  [000] ...1  6883.866296: writeback_dirty_inode: bdi 8:0: ino=23 state=I_DIRTY_PAGES flags=I_DIRTY_SYNC|I_DIRTY_DATASYNC|I_DIRTY_PAGES
 
+kworker:
    kworker/u16:2-5968  [000] ...2  6888.104338: writeback_start: bdi 8:0: sb_dev 0:0 nr_pages=49320 sync_mode=0 kupdate=1 range_cyclic=1 background=0 reason=periodic cgroup=/
    kworker/u16:2-5968  [000] .n.2  6888.104490: writeback_queue_io: bdi 8:0: older=4295625906 age=2000 enqueue=2 reason=periodic cgroup=/
    kworker/u16:2-5968  [000] ...1  6888.106774: writeback_single_inode_start: bdi 8:0: ino=0 state=I_DIRTY_PAGES|I_SYNC dirtied_when=4295625605 age=5 index=0 to_write=13312 wrote=0 cgroup=/
@@ -83,9 +81,11 @@ int main(int argc, char *argv[])
    kworker/u16:2-5968  [000] ...1  6888.111957: ext4_es_lookup_extent_enter: dev 259,0 ino 23 lblk 0
    kworker/u16:2-5968  [000] ...1  6888.112513: ext4_es_lookup_extent_exit: dev 259,0 ino 23 found 1 [0/1) 576460752303423487 D0x10
    kworker/u16:2-5968  [000] ...1  6888.113091: ext4_ext_map_blocks_enter: dev 259,0 ino 23 lblk 0 len 1 flags CREATE|DELALLOC|METADATA_NOFAIL
+
    kworker/u16:2-5968  [000] ...1  6888.113693: ext4_request_blocks: dev 259,0 ino 23 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
    kworker/u16:2-5968  [000] ...1  6888.114506: ext4_mballoc_alloc: dev 259,0 inode 23 orig 0/0/1@0 goal 0/0/1@0 result 0/1563/1@0 blks 1 grps 1 cr 1 flags HINT_DATA|HINT_NOPREALLOC|DELALLOC_RESV|USE_RESV tail 0 broken 0
    kworker/u16:2-5968  [000] ...1  6888.116550: ext4_allocate_blocks: dev 259,0 ino 23 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 block 1563 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
+
    kworker/u16:2-5968  [000] ...1  6888.117168: ext4_mark_inode_dirty: dev 259,0 ino 23 caller __ext4_ext_dirty+0x6c/0x78
    kworker/u16:2-5968  [000] ...1  6888.117957: ext4_get_reserved_cluster_alloc: dev 259,0 ino 23 lblk 0 len 1
    kworker/u16:2-5968  [000] ...2  6888.118828: ext4_da_update_reserve_space: dev 259,0 ino 23 mode 0107320 i_blocks 0 used_blocks 1 reserved_data_blocks 1 reserved_meta_blocks 0 allocated_meta_blocks 0 quota_claim 1
