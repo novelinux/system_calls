@@ -82,9 +82,12 @@ kworker:
    kworker/u16:2-5968  [000] ...1  6888.112513: ext4_es_lookup_extent_exit: dev 259,0 ino 23 found 1 [0/1) 576460752303423487 D0x10
    kworker/u16:2-5968  [000] ...1  6888.113091: ext4_ext_map_blocks_enter: dev 259,0 ino 23 lblk 0 len 1 flags CREATE|DELALLOC|METADATA_NOFAIL
 
+
    kworker/u16:2-5968  [000] ...1  6888.113693: ext4_request_blocks: dev 259,0 ino 23 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
    kworker/u16:2-5968  [000] ...1  6888.114506: ext4_mballoc_alloc: dev 259,0 inode 23 orig 0/0/1@0 goal 0/0/1@0 result 0/1563/1@0 blks 1 grps 1 cr 1 flags HINT_DATA|HINT_NOPREALLOC|DELALLOC_RESV|USE_RESV tail 0 broken 0
    kworker/u16:2-5968  [000] ...1  6888.116550: ext4_allocate_blocks: dev 259,0 ino 23 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 block 1563 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
+
+
 
    kworker/u16:2-5968  [000] ...1  6888.117168: ext4_mark_inode_dirty: dev 259,0 ino 23 caller __ext4_ext_dirty+0x6c/0x78
    kworker/u16:2-5968  [000] ...1  6888.117957: ext4_get_reserved_cluster_alloc: dev 259,0 ino 23 lblk 0 len 1
@@ -343,12 +346,14 @@ fsync:
   test-open-writ-4930  [001] ...1  1495.733271: ext4_es_lookup_extent_exit: dev 259,13 ino 16 found 1 [0/1) 576460752303423487 D0x10
   test-open-writ-4930  [001] ...1  1495.733274: ext4_ext_map_blocks_enter: dev 259,13 ino 16 lblk 0 len 1 flags CREATE|DELALLOC|METADATA_NOFAIL
 
-  test-open-writ-4930  [001] ...1  1495.733294: ext4_request_blocks: dev 259,13 ino 16 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
 
+
+  test-open-writ-4930  [001] ...1  1495.733294: ext4_request_blocks: dev 259,13 ino 16 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
   test-open-writ-4930  [001] ...1  1495.733356: ext4_mb_new_group_pa: dev 259,13 ino 16 pstart 3072 len 512 lstart 3072
   test-open-writ-4930  [001] ...1  1495.733397: ext4_mballoc_alloc: dev 259,13 inode 16 orig 0/0/1@0 goal 0/0/512@0 result 0/3072/512@0 blks 1 grps 1 cr 0 flags HINT_DATA|HINT_GRP_ALLOC|DELALLOC_RESV|USE_RESV tail 512 broken 1024
-
   test-open-writ-4930  [001] ...1  1495.733404: ext4_allocate_blocks: dev 259,13 ino 16 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 block 3072 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
+
+
 
   test-open-writ-4930  [001] ...1  1495.733421: ext4_mark_inode_dirty: dev 259,13 ino 16 caller __ext4_ext_dirty+0x6c/0x78
   test-open-writ-4930  [001] ...1  1495.733433: ext4_get_reserved_cluster_alloc: dev 259,13 ino 16 lblk 0 len 1

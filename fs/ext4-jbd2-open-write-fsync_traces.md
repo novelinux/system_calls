@@ -76,9 +76,7 @@ kworker:
    kworker/u16:8-9916  [000] ...1 22427.743336: ext4_ext_map_blocks_enter: dev 259,0 ino 13 lblk 0 len 1 flags CREATE|DELALLOC|METADATA_NOFAIL
 
    kworker/u16:8-9916  [000] ...1 22427.743380: ext4_request_blocks: dev 259,0 ino 13 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
-
    kworker/u16:8-9916  [000] ...1 22427.743608: ext4_mballoc_alloc: dev 259,0 inode 13 orig 0/0/1@0 goal 0/0/1@0 result 0/1555/1@0 blks 2 grps 1 cr 1 flags HINT_DATA|HINT_NOPREALLOC|DELALLOC_RESV|USE_RESV tail 0 broken 0
-
    kworker/u16:8-9916  [000] ...1 22427.743620: ext4_allocate_blocks: dev 259,0 ino 13 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 block 1555 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
 
 
@@ -321,14 +319,13 @@ fsync:
   test-open-writ-10096 [000] ...1 23439.422109: ext4_es_lookup_extent_exit: dev 259,0 ino 16 found 1 [0/1) 576460752303423487 D0x10
   test-open-writ-10096 [000] ...1 23439.422111: ext4_ext_map_blocks_enter: dev 259,0 ino 16 lblk 0 len 1 flags CREATE|DELALLOC|METADATA_NOFAIL
 
+
+
   test-open-writ-10096 [000] ...1 23439.422130: ext4_request_blocks: dev 259,0 ino 16 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
-
-
   test-open-writ-10096 [000] ...1 23439.422183: ext4_mballoc_prealloc: dev 259,0 inode 16 orig 0/0/1@0 result 0/2053/1@0
-
-
-
   test-open-writ-10096 [000] ...1 23439.422189: ext4_allocate_blocks: dev 259,0 ino 16 flags HINT_DATA|DELALLOC_RESV|USE_RESV len 1 block 2053 lblk 0 goal 0 lleft 0 lright 0 pleft 0 pright 0
+
+
 
   test-open-writ-10096 [000] ...1 23439.422205: ext4_mark_inode_dirty: dev 259,0 ino 16 caller __ext4_ext_dirty+0x6c/0x78
   test-open-writ-10096 [000] ...1 23439.422215: ext4_get_reserved_cluster_alloc: dev 259,0 ino 16 lblk 0 len 1
