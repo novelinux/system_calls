@@ -140,8 +140,8 @@ mark_buffer_dirty
 
 ## ext4_writepages
 
-这个函数在带SYNC的写操作中(O_SYNC或fsync)操作一般由调用写操作的进程本身执行,正常不带SYNC的
-写操作又kworker来执行对应的writepages.
+这个函数在带SYNC的写操作中(O_SYNC或fsync)操作一般由调用write操作的进程本身执行fsync trigger,
+正常不带SYNC的写操作kworker来执行对应的writepages.
 
 ```
 ext4_writepages
@@ -294,7 +294,7 @@ cgwb_bdi_init
  |
 wb_init
  |
-INIT_DELAYED_WORK(&wb->dwork, wb_forkfn)
+INIT_DELAYED_WORK(&wb->dwork, wb_workfn)
 ```
 
 ## kworker - insert async_run_entry_fn

@@ -69,7 +69,7 @@ ext4_sync_file
  +-> { event: ext4_sync_file_exit }
 ```
 
-#### ext4_writepages
+### ext4_writepages
 
 ```
 ext4_writepages
@@ -105,7 +105,7 @@ ext4_writepages
  +-> { event: ext4_writepages_result }
 ```
 
-#### ext4_map_blocks
+### ext4_map_blocks
 
 ```
 ext4_map_blocks
@@ -118,9 +118,15 @@ ext4_map_blocks
  |   |
  |   +-> ext4_mb_new_blocks { event: ext4_request_blocks }
  |   |   |
- |   |   +-> ext4_mb_release_context - ext4_mb_collect_stats
- |   |   |                                       |
- |   |   |  { event: ext4_mballoc_prealloc [O_SYNC | fsync]}
+ |   |   +-> ext4_mb_new_preallocation -> ext4_mb_new_group_pa { event: ext4_mb_new_group_pa [nobarrier]}
+ |   |   |
+ |   |   +-> ext4_mb_release_context
+ |   |   |    |
+ |   |   |    ext4_mb_collect_stats
+ |   |   |    |
+ |   |   |    +-> { event: ext4_mballoc_prealloc [barrier + O_SYNC | fsync]}
+ |   |   |    |
+ |   |   |    +-> { event: ext4_mballoc_alloc [nobarrier + O_SYNC | fsync]}
  |   |   |
  |   |   +-> { event: ext4_allocate_blocks }
  |   |
