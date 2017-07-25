@@ -97,25 +97,45 @@ ext4_da_write_end { event: ext4_da_write_end }
  |
  +-> generic_write_end
  |   |
- |   +-> block_write_end
- |   |   |
- |   |   __block_commit_write
+ |   +-> **block_write_end**
  |   |
  |   +-> mark_inode_dirty
  |       |
- |       __mark_inode_dirty
- |       |
- |       sb->s_op->dirty_inode -> ext4_dirty_inode
- |       |
- |       ext4_journal_start
- |       |
- |       __ext4_journal_start
- |       |
- |       __ext4_journal_start_sb { event: ext4_journal_start }
+ |   __mark_inode_dirty { event: writeback_mark_inode_dirty }
+ |   |
+ |   +-> { event: writeback_dirty_inode_start }
+ |   |
+ |   +-> sb->s_op->dirty_inode -> ext4_dirty_inode
+ |   |   |
+ |   |   ext4_journal_start
+ |   |   |
+ |   |   __ext4_journal_start
+ |   |   |
+ |   |   __ext4_journal_start_sb { event: ext4_journal_start }
+ |   |
+ |   +-> { event: writeback_dirty_inode }
  |
  +-> ext4_journal_stop
      |
      __ext4_journal_stop -> jbd2_journal_stop { event: jbd2_handle_stats }
+```
+
+### block_write_end
+
+```
+block_write_end
+ |
+__block_commit_write
+ |
+mark_buffer_dirty
+ |
+ +-> __set_page_dirty
+ |   |
+ |   account_page_dirtied { event: writeback_dirty_page }
+ |
+ +-> __mark_inode_dirty { event: writeback_mark_inode_dirty }
+     |
+     +-> { event: writeback_dirty_inode_enqueue }
 ```
 
 ## ext4_writepages
