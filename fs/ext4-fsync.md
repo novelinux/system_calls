@@ -33,6 +33,9 @@ int main(int argc, char *argv[])
 
 ## fsync - test-open-write-fsync
 
+在do_fsync函数中会根据入参fd找到对应的文件描述符file结构，在vfs_fsync_range函数中fdatasync流程不会执行mark_inode_dirty_sync函数分支，fsync函数会判断当前的文件是否在访问、修改时间上有发生过变化，若发生过变化则会调用mark_inode_dirty_sync分支更新元数据并设置为dirty然后将对应的赃页添加到jbd2日志的对应链表中等待日志提交进程执行回写；随后的ext4_sync_file函数中会调用filemap_write_and_wait_range函数同步文件中的dirty page cache，它会向block层提交bio并等待回写执行结束，然后调用jbd2_complete_transaction函数触发元数据回写（若元数据不为脏则不会回写任何与该文件相关的元数据），最后若Ext4文件系统启用了barrier特性且需要flush write cache，那调用blkdev_issue_flush向底层发送flush指令，这将触发磁盘中的cache写入介质的操作（这样就能保证在正常情况下数据都被落盘了）。
+
+
 ```
 fsync
  |
