@@ -1,0 +1,110 @@
+digraph G {
+  subgraph cluster0 {
+    node [style=filled,color=white];
+    style=filled;
+    color=lightgrey;
+    label = "user";
+
+    a0[label="read"]
+  }
+
+  subgraph cluster1 {
+    node [style=filled];
+    label = "sys";
+    color=blue;
+
+    b0[label="read"]
+    b1[label="vfs_read"]
+    b2[label="__vfs_read"]
+    b3[label="new_sync_read"]
+    b4[label="filep->f_op->read_iter"]
+    b5[label="generic_file_read_iter"]
+
+    b0->b1->b2->b3->b4->b5;
+    b5->b6 [label="page cache"];
+    b5->b40 [label="direct io"];
+
+    b6[label="do_generic_file_read"]
+    b7[label="find_get_page"]
+    b8[label="page_cache_sync_readahead"]
+    no_cached_page
+    b9[label="PageReadahead"]
+
+    b6->find_page->b7;
+    b7->b8 [label="No"];
+    b8->b7;
+    b7->no_cached_page [label="No again"];
+    b7->b9 [label="Yes"];
+
+    b10[label="page_cache_async_readahead"]
+    b11[label="PageUptodate"]
+
+    b9->b10 [label="Yes"];
+    b9->b11 [label="No"];
+    b10->b11;
+
+    b12[label="page_ok"]
+
+    b13[label="page_not_up_to_date"]
+    b14[label="page_not_up_to_date_locked"]
+
+    b15[label="mapping_writably_mapped"];
+    b16[label="mark_page_accessed"];
+    b17[label="copy_page_to_iter"];
+    b18[label="page_cache_release"];
+    b19[label="iov_iter_count"];
+
+    b11->b12 [label="Yes"];
+    b11->b13 [label="No"];
+    b11->b14 [label="No"];
+
+    b12->b15->b16->b17->b18->b19;
+    b19->find_page [label="count != 0"];
+
+    b20[label="lock_page_killable"];
+
+    b13->read_page_error [label="No"];
+    b13->b20 [label="Yes"];
+    b20->b14;
+
+    b21[label="page->mapping"];
+    b22[label="PageUptodate"];
+
+    b14->b21;
+    b21->find_page [label="False"];
+    b21->b22 [label="True"];
+    b22->b23 [label="No"];
+    b22->b12 [label="Yes"];
+
+    b23[label="read_page"];
+    b24[label="address_space->readpage"]
+    b25[label="ext4_aops.ext4_readpage"]
+
+    b23->b24->b25;
+    b24->b12 [label="finish"];
+
+    b26[label="ext4_readpage_inline"]
+    b27[label="ext4_mpage_readpages"]
+    b28[label="ext4_map_blocks"]
+    b29[label="ext4_submit_bio_read"]
+    b30[label="submit_bio"]
+
+    b25->b26[label="has_inline_data"]
+    b25->b27;
+    b27->b28;
+    b27->b29->b30;
+
+    b31[label="mpage_end_io"]
+    data_ready->Disk_Controller->interrupt->CPU->b31;
+    b31->b20 [label="wake up"];
+
+    b40[label="filemap_write_and_wait_range"]
+  }
+
+  start->a0;
+  a0->b0;
+  b19->end [label="count == 0"];
+
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
