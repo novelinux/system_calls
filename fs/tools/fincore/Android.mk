@@ -1,0 +1,19 @@
+# Copyright 2006 The Android Open Source Project
+
+LOCAL_PATH:= $(call my-dir)
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES:= fincore.c
+
+LOCAL_MODULE:= fincore
+
+LOCAL_MODULE_TAGS := optional
+
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT_SBIN)
+LOCAL_UNSTRIPPED_PATH := $(TARGET_ROOT_OUT_SBIN_UNSTRIPPED)
+
+LOCAL_SHARED_LIBRARIES := libc
+
+include $(BUILD_EXECUTABLE)
+
