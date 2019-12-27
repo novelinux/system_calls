@@ -19,7 +19,11 @@ ENTRY(execve)
 END(execve)
 ```
 
-sys_execve
+## sys_execve
 ----------------------------------------
 
 https://github.com/novelinux/linux-4.x.y/tree/master/fs/exec.c/sys_execve.md
+
+## load_elf_binary
+
+https://github.com/novelinux/linux-4.x.y/tree/master/fs/binfmt_elf.c/load_elf_binary.md

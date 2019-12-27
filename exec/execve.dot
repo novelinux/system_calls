@@ -1,0 +1,55 @@
+digraph G {
+  subgraph cluster0 {
+    node [style=filled,color=white];
+    style=filled;
+    color=lightgrey;
+    label = "execve";
+
+    a0[label="sys_execve"]
+    a1[label="do_execve"]
+    a2[label="do_execveat_common"]
+    a3[label="do_open_execat"]
+    a4[label="bprm_mm_init"]
+    a5[label="prepare_binprm"]
+    a6[label="exec_binprm"]
+    a7[label="search_binary_handler"]
+    a8[label="load_binary"]
+
+    a0->a1->a2->a3->a4->a5->a6->a7->a8;
+  }
+
+  subgraph cluster1 {
+    node [style=filled];
+    label = "elf";
+    color=blue;
+
+    b0[label="load_elf_binary"]
+    b1[label="load_elf_phdrs"]
+
+    b0->b1;
+
+    b2[label="open_exec(elf_interpreter)"]
+
+    b1->b2[label="PT_INTERP"]
+
+    b3[label="set_brk"]
+    b4[label="elf_map"]
+    b5[label="load_addr_set"]
+
+    b1->b3[label="PT_LOAD"]
+    b3->b4->b5;
+
+    b6[label="load_elf_interp"]
+
+    b2->b6;
+  }
+
+  start->a0;
+
+  a8->b0;
+
+  b6->end;
+  
+  start [shape=Mdiamond];
+  end [shape=Msquare];
+}
